@@ -4,6 +4,7 @@ import bg.tu_varna.sit.f24621606.enums.ItemCategory;
 import bg.tu_varna.sit.f24621606.enums.OrderStatus;
 import bg.tu_varna.sit.f24621606.model.MenuItem;
 import bg.tu_varna.sit.f24621606.model.Order;
+import bg.tu_varna.sit.f24621606.model.OrderItem;
 import bg.tu_varna.sit.f24621606.model.Table;
 
 import java.util.ArrayList;
@@ -183,6 +184,45 @@ public class RestaurantService {
                 table.free();
                 break;
             }
+        }
+    }
+
+    public void showOrder(int orderId) {   //Методът намира поръчката и показва информация за нея, всички поръчани артикули и крайната сума.
+
+        Order foundOrder = null;
+
+        for (Order order : orders) {
+            if (order.getId() == orderId) {
+                foundOrder = order;
+                break;
+            }
+        }
+
+        if (foundOrder == null) {
+            throw new IllegalArgumentException("Поръчката не съществува.");
+        }
+
+        System.out.println(foundOrder);
+
+        System.out.println("Артикули:");
+
+        for (OrderItem item : foundOrder.getItems()) {
+            System.out.println(item);
+        }
+
+        System.out.printf("Обща сума: %.2f%n",
+                foundOrder.getTotalSum());
+    }
+
+    public void showMenu() {  //Методът проверява дали има артикули в менюто и ако има, ги извежда един по един.
+
+        if (menuItems.isEmpty()) {
+            System.out.println("Няма артикули в менюто.");
+            return;
+        }
+
+        for (MenuItem item : menuItems) {
+            System.out.println(item);
         }
     }
 
