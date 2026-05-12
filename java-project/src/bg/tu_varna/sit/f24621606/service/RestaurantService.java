@@ -226,4 +226,28 @@ public class RestaurantService {
         }
     }
 
+    public void showTables() { //показва списък на масите и тяхното състояние
+
+        if (tables.isEmpty()) {
+            System.out.println("Няма добавени маси.");
+            return;
+        }
+
+        for (Table table : tables) {
+            System.out.println(table);
+        }
+    }
+
+    public void showOrders() { //показва всички поръчки
+
+        if (orders.isEmpty()) {
+            System.out.println("Няма поръчки.");
+            return;
+        }
+
+        for (Order order : orders) {
+            System.out.println(order);
+        }
+    }
+
 }
