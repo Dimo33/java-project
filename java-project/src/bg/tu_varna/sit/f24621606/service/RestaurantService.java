@@ -2,6 +2,7 @@ package bg.tu_varna.sit.f24621606.service;
 
 import bg.tu_varna.sit.f24621606.enums.ItemCategory;
 import bg.tu_varna.sit.f24621606.enums.OrderStatus;
+import bg.tu_varna.sit.f24621606.enums.TableStatus;
 import bg.tu_varna.sit.f24621606.model.MenuItem;
 import bg.tu_varna.sit.f24621606.model.Order;
 import bg.tu_varna.sit.f24621606.model.OrderItem;
@@ -36,7 +37,7 @@ public class RestaurantService {
         nextOrderId = 1;
     }
 
-    public void addMenuItem(String name, ItemCategory category, double price, int quantity) {
+    public void addMenuItem(String name, ItemCategory category, double price, int quantity) { //добавя нов артикул в менюто
 
         MenuItem item = new MenuItem(nextMenuItemId, name, category, price, quantity);
 
@@ -44,7 +45,7 @@ public class RestaurantService {
         nextMenuItemId++;
     }
 
-    public void addTable(int number, int seats) {
+    public void addTable(int number, int seats) { //добавя нош маса
 
         Table table = new Table(number, seats);
 
@@ -92,7 +93,7 @@ public class RestaurantService {
         nextOrderId++;
     }
 
-    public void addItemToOrder(int orderId, int itemId, int quantity) {   // Намира поръчката,проверява дали е OPEN,намира артикула от менюто,намалява наличността, добавя артикула към поръчката
+    public void addItemToOrder(int orderId, int itemId, int quantity) {   // Намира поръчката,проверява дали е опен,намира артикула от менюто, намалява наличността, добавя артикула към поръчката
 
         Order foundOrder = null;
 
@@ -128,6 +129,7 @@ public class RestaurantService {
 
         foundOrder.addItem(foundItem, quantity);
     }
+
 
     public void closeOrder(int orderId) { //намери поръчката, провери дали е OPEN, смени статуса на PAID, освободи масата
 
@@ -237,17 +239,95 @@ public class RestaurantService {
             System.out.println(table);
         }
     }
-
-    public void showOrders() { //показва всички поръчки
-
-        if (orders.isEmpty()) {
-            System.out.println("Няма поръчки.");
-            return;
-        }
+    public void showOrders(OrderStatus status) {//показва всички поръчки
+                                                   //в зависимост от подадения статус,отворена,платена,отказана
+        boolean found = false;
 
         for (Order order : orders) {
-            System.out.println(order);
+
+            if (order.getStatus() == status) {
+                System.out.println(order);
+                found = true;
+            }
+        }
+
+        if (!found) {
+            System.out.println("Няма поръчки с този статус.");
         }
     }
+
+    public void removeMenuItem(int itemId){ //Премахва артикул от менюто.
+        MenuItem foundItem = null;
+
+        for(MenuItem item : menuItems){
+            if(item.getId() == itemId){
+                foundItem = item;
+                break;
+            }
+        }
+        if(foundItem == null){
+            throw new IllegalArgumentException("Артикулът не съществува");
+        }
+        menuItems.remove(foundItem);
+    }
+
+    public void removeTable(int tableNumber) { //Премахва свободна маса от системата
+
+        Table foundTable = null;
+
+        for (Table table : tables) {
+            if (table.getNumber() == tableNumber) {
+                foundTable = table;
+                break;
+            }
+        }
+
+        if (foundTable == null) {
+            throw new IllegalArgumentException("Масата не съществува.");
+        }
+
+        if (foundTable.getStatus() != TableStatus.FREE) {
+            throw new IllegalArgumentException("Масата е заета.");
+        }
+
+        tables.remove(foundTable);
+    }
+
+    
+    public void removeItemFromOrder(int orderId, int itemId) { //Премахва артикул от поръчката и връща количеството в наличност
+                                                                  // ако поръчката на продукта бъде отказана
+        Order foundOrder = null;
+
+        for (Order order : orders) {
+            if (order.getId() == orderId) {
+                foundOrder = order;
+                break;
+            }
+        }
+
+        if (foundOrder == null) {
+            throw new IllegalArgumentException("Поръчката не съществува.");
+        }
+
+        OrderItem foundOrderItem = null;
+
+        for (OrderItem item : foundOrder.getItems()) {
+            if (item.getItem().getId() == itemId) {
+                foundOrderItem = item;
+                break;
+            }
+        }
+
+        if (foundOrderItem == null) {
+            throw new IllegalArgumentException("Артикулът не е намерен в поръчката.");
+        }
+
+        foundOrder.getItems().remove(foundOrderItem);
+
+        foundOrderItem.getItem()
+                .increaseQuantity(foundOrderItem.getQuantity());
+    }
+
+
 
 }
