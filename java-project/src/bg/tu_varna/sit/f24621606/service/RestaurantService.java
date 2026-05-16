@@ -8,6 +8,7 @@ import bg.tu_varna.sit.f24621606.model.Order;
 import bg.tu_varna.sit.f24621606.model.OrderItem;
 import bg.tu_varna.sit.f24621606.model.Table;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -328,6 +329,71 @@ public class RestaurantService {
                 .increaseQuantity(foundOrderItem.getQuantity());
     }
 
+    public void lowStock(int threshold) { //Показва артикулите,чиято наличност е под дадена стойност
 
+        boolean found = false;
+
+        for (MenuItem item : menuItems) {
+
+            if (item.getQuantity() < threshold) {
+                System.out.println(item);
+                found = true;
+            }
+        }
+
+        if (!found) {
+            System.out.println("Няма артикули с ниска наличност.");
+        }
+    }
+
+    public void report(LocalDateTime from, LocalDateTime to) { //Смята приходите от PAID поръчките за даден период.
+
+        double totalRevenue = 0;
+
+        for (Order order : orders) {
+
+            LocalDateTime orderDate = order.getCreatedAt();
+
+            if ((orderDate.isEqual(from) || orderDate.isAfter(from)) &&
+                    (orderDate.isEqual(to) || orderDate.isBefore(to)) &&
+                    order.getStatus() == OrderStatus.PAID) {
+
+                totalRevenue += order.getTotalSum();
+            }
+        }
+
+        System.out.printf("Общ приход: %.2f%n", totalRevenue);
+    }
+
+    public void topItems(LocalDateTime from, LocalDateTime to) { //Показва най-поръчваните артикули за даден период.
+
+        for (MenuItem menuItem : menuItems) {
+
+            int totalQuantity = 0;
+
+            for (Order order : orders) {
+
+                LocalDateTime orderDate = order.getCreatedAt();
+
+                if ((orderDate.isEqual(from) || orderDate.isAfter(from)) &&
+                        (orderDate.isEqual(to) || orderDate.isBefore(to)) &&
+                        order.getStatus() == OrderStatus.PAID) {
+
+                    for (OrderItem orderItem : order.getItems()) {
+
+                        if (orderItem.getItem().getId() == menuItem.getId()) {
+                            totalQuantity += orderItem.getQuantity();
+                        }
+                    }
+                }
+            }
+
+            if (totalQuantity > 0) {
+                System.out.println(menuItem.getName()
+                        + " - поръчани: "
+                        + totalQuantity);
+            }
+        }
+    }
 
 }
