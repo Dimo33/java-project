@@ -37,7 +37,16 @@ public class CommandProcessor {
         commands.put("additem", new AddItemCommand(restaurantService));
         commands.put("openorder", new OpenOrderCommand(restaurantService));
         commands.put("addtoorder", new AddToOrderCommand(restaurantService));
-
+        commands.put("removefromorder", new RemoveFromOrderCommand(restaurantService));
+        commands.put("showorder", new ShowOrderCommand(restaurantService));
+        commands.put("closeorder", new CloseOrderCommand(restaurantService));
+        commands.put("cancelorder", new CancelOrderCommand(restaurantService));
+        commands.put("lowstock", new LowStockCommand(restaurantService));
+        commands.put("report", new ReportCommand(restaurantService));
+        commands.put("topitems", new TopItemsCommand(restaurantService));
+        commands.put("removetable", new RemoveTableCommand(restaurantService));
+        commands.put("removeitem", new RemoveItemCommand(restaurantService));
+        commands.put("exit", new ExitCommand(this));
     }
 
     public void processCommand(String input) {
