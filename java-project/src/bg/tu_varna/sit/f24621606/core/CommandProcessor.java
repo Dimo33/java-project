@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import bg.tu_varna.sit.f24621606.service.RestaurantService;
+import bg.tu_varna.sit.f24621606.storage.StorageService;
+import bg.tu_varna.sit.f24621606.storage.XmlStorageService;
 
 
 /**
@@ -15,6 +17,7 @@ public class CommandProcessor {
 
     private final Map<String, Command> commands;
     private final RestaurantService restaurantService;
+    private final StorageService storageService;
 
     private boolean running;
 
@@ -23,6 +26,7 @@ public class CommandProcessor {
         this.restaurantService = restaurantService;
         commands = new HashMap<>();
         running = true;
+        this.storageService = new XmlStorageService();
 
         registerCommands();
     }
@@ -47,6 +51,9 @@ public class CommandProcessor {
         commands.put("removetable", new RemoveTableCommand(restaurantService));
         commands.put("removeitem", new RemoveItemCommand(restaurantService));
         commands.put("exit", new ExitCommand(this));
+        commands.put("save", new SaveCommand(restaurantService, storageService));
+        commands.put("saveas", new SaveAsCommand(restaurantService, storageService));
+        commands.put("open", new OpenCommand(restaurantService, storageService));
     }
 
     public void processCommand(String input) {
@@ -72,6 +79,7 @@ public class CommandProcessor {
         } catch (Exception e) {
             System.out.println("Грешка: " + e.getMessage());
         }
+
     }
 
     public boolean isRunning() {

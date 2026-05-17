@@ -396,4 +396,26 @@ public class RestaurantService {
         }
     }
 
+    public void clearData() {  //Това е нужно, за да може при open <file> да изчистим старите данни и да заредим новите.
+        menuItems.clear();
+        tables.clear();
+        orders.clear();
+        nextMenuItemId = 1;
+        nextOrderId = 1;
+    }
+
+    public void updateNextIds() {
+        for (MenuItem item : menuItems) {
+            if (item.getId() >= nextMenuItemId) {
+                nextMenuItemId = item.getId() + 1;
+            }
+        }
+
+        for (Order order : orders) {
+            if (order.getId() >= nextOrderId) {
+                nextOrderId = order.getId() + 1;
+            }
+        }
+    }
+
 }

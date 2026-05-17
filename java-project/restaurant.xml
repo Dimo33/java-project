@@ -1,0 +1,18 @@
+<restaurant>
+  <menu>
+    <item>
+      <id>1</id>
+      <name>Pizza</name>
+      <category>MAIN</category>
+      <price>12.5</price>
+      <quantity>10</quantity>
+    </item>
+  </menu>
+  <tables>
+    <table>
+      <number>1</number>
+      <seats>4</seats>
+      <status>FREE</status>
+    </table>
+  </tables>
+</restaurant>
