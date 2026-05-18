@@ -367,7 +367,9 @@ public class RestaurantService {
         System.out.printf("Общ приход: %.2f%n", totalRevenue);
     }
 
-    public void topItems(LocalDate from, LocalDate to) { //Показва най-поръчваните артикули за даден период.
+    public void topItems(int n, LocalDate from, LocalDate to) {
+
+        List<OrderItem> soldItems = new ArrayList<>();
 
         for (MenuItem menuItem : menuItems) {
 
@@ -392,10 +394,31 @@ public class RestaurantService {
             }
 
             if (totalQuantity > 0) {
-                System.out.println(menuItem.getName()
-                        + " - поръчани: "
-                        + totalQuantity);
+                soldItems.add(new OrderItem(menuItem, totalQuantity));
             }
+        }
+
+        soldItems.sort((first, second) ->
+                second.getQuantity() - first.getQuantity()
+        );
+
+        int count = 0;
+
+        for (OrderItem item : soldItems) {
+
+            if (count == n) {
+                break;
+            }
+
+            System.out.println(item.getItem().getName()
+                    + " - продадени: "
+                    + item.getQuantity());
+
+            count++;
+        }
+
+        if (soldItems.isEmpty()) {
+            System.out.println("Няма продадени артикули за този период.");
         }
     }
 
@@ -419,6 +442,17 @@ public class RestaurantService {
                 nextOrderId = order.getId() + 1;
             }
         }
+    }
+    public MenuItem findMenuItemById(int itemId) { //Намира MenuItem по ID.
+
+        for (MenuItem item : menuItems) {
+
+            if (item.getId() == itemId) {
+                return item;
+            }
+        }
+
+        return null;
     }
 
 }

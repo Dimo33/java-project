@@ -30,6 +30,13 @@ public class Order {
         this.status = OrderStatus.OPEN;
         this.createdAt = LocalDateTime.now();
     }
+    public Order(int id, int tableNumber, OrderStatus status, LocalDateTime createdAt) {
+        this.id = id;
+        this.tableNumber = tableNumber;
+        this.items = new ArrayList<>();
+        this.status = status;
+        this.createdAt = createdAt;
+    }
 
     public int getId() {
         return id;

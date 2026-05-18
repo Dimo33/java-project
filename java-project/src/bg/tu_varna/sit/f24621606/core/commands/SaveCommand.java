@@ -28,6 +28,6 @@ public class SaveCommand implements Command {
                 "restaurant.xml"
         );
 
-        System.out.println("Данните са записани.");
+        System.out.println("Промените са записани");
     }
 }

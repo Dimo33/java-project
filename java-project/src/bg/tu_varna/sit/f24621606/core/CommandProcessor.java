@@ -54,6 +54,7 @@ public class CommandProcessor {
         commands.put("save", new SaveCommand(restaurantService, storageService));
         commands.put("saveas", new SaveAsCommand(restaurantService, storageService));
         commands.put("open", new OpenCommand(restaurantService, storageService));
+        commands.put("close", new CloseCommand(restaurantService));
     }
 
     public void processCommand(String input) {

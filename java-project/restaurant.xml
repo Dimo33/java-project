@@ -1,30 +1,8 @@
 <restaurant>
   <menu>
-    <item>
-      <id>1</id>
-      <name>pizza</name>
-      <category>MAIN</category>
-      <price>12.5</price>
-      <quantity>8</quantity>
-    </item>
-    <item>
-      <id>2</id>
-      <name>cola</name>
-      <category>DRINK</category>
-      <price>3.0</price>
-      <quantity>19</quantity>
-    </item>
   </menu>
   <tables>
-    <table>
-      <number>1</number>
-      <seats>4</seats>
-      <status>FREE</status>
-    </table>
-    <table>
-      <number>2</number>
-      <seats>2</seats>
-      <status>FREE</status>
-    </table>
   </tables>
+  <orders>
+  </orders>
 </restaurant>

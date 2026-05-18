@@ -19,16 +19,18 @@ public class TopItemsCommand implements Command {
     @Override
     public void execute(String[] args) {
 
-        if (args.length < 3) {
+        if (args.length < 4) {
             throw new IllegalArgumentException(
-                    "Използване: topitems <from> <to>"
+                    "Използване: topitems <n> <from> <to>"
             );
         }
 
-        LocalDate from = LocalDate.parse(args[1]);
+        int n = Integer.parseInt(args[1]);
 
-        LocalDate to = LocalDate.parse(args[2]);
+        LocalDate from = LocalDate.parse(args[2]);
 
-        restaurantService.topItems(from, to);
+        LocalDate to = LocalDate.parse(args[3]);
+
+        restaurantService.topItems(n, from, to);
     }
 }
