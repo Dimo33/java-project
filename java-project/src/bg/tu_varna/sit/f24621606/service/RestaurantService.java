@@ -8,7 +8,7 @@ import bg.tu_varna.sit.f24621606.model.Order;
 import bg.tu_varna.sit.f24621606.model.OrderItem;
 import bg.tu_varna.sit.f24621606.model.Table;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +43,8 @@ public class RestaurantService {
         MenuItem item = new MenuItem(nextMenuItemId, name, category, price, quantity);
 
         menuItems.add(item);
-        nextMenuItemId++;
+        nextMenuItemId++; //id-to се генерира автоматично за следващият артикул
+
     }
 
     public void addTable(int number, int seats) { //добавя нош маса
@@ -346,13 +347,14 @@ public class RestaurantService {
         }
     }
 
-    public void report(LocalDateTime from, LocalDateTime to) { //Смята приходите от PAID поръчките за даден период.
+    public void report(LocalDate from, LocalDate to) {
 
         double totalRevenue = 0;
 
         for (Order order : orders) {
 
-            LocalDateTime orderDate = order.getCreatedAt();
+            LocalDate orderDate =
+                    order.getCreatedAt().toLocalDate();
 
             if ((orderDate.isEqual(from) || orderDate.isAfter(from)) &&
                     (orderDate.isEqual(to) || orderDate.isBefore(to)) &&
@@ -365,7 +367,7 @@ public class RestaurantService {
         System.out.printf("Общ приход: %.2f%n", totalRevenue);
     }
 
-    public void topItems(LocalDateTime from, LocalDateTime to) { //Показва най-поръчваните артикули за даден период.
+    public void topItems(LocalDate from, LocalDate to) { //Показва най-поръчваните артикули за даден период.
 
         for (MenuItem menuItem : menuItems) {
 
@@ -373,7 +375,8 @@ public class RestaurantService {
 
             for (Order order : orders) {
 
-                LocalDateTime orderDate = order.getCreatedAt();
+                LocalDate orderDate =
+                        order.getCreatedAt().toLocalDate();
 
                 if ((orderDate.isEqual(from) || orderDate.isAfter(from)) &&
                         (orderDate.isEqual(to) || orderDate.isBefore(to)) &&
