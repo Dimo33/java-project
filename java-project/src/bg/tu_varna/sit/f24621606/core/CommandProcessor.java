@@ -9,7 +9,6 @@ import bg.tu_varna.sit.f24621606.service.RestaurantService;
 import bg.tu_varna.sit.f24621606.storage.StorageService;
 import bg.tu_varna.sit.f24621606.storage.XmlStorageService;
 
-
 /**
  * Обработва командите от конзолата.
  */
@@ -20,12 +19,16 @@ public class CommandProcessor {
     private final StorageService storageService;
 
     private boolean running;
+    private boolean fileOpened;
 
     public CommandProcessor(RestaurantService restaurantService) {
 
         this.restaurantService = restaurantService;
         commands = new HashMap<>();
+
         running = true;
+        fileOpened = false;
+
         this.storageService = new XmlStorageService();
 
         registerCommands();
@@ -50,11 +53,20 @@ public class CommandProcessor {
         commands.put("topitems", new TopItemsCommand(restaurantService));
         commands.put("removetable", new RemoveTableCommand(restaurantService));
         commands.put("removeitem", new RemoveItemCommand(restaurantService));
+
         commands.put("exit", new ExitCommand(this));
-        commands.put("save", new SaveCommand(restaurantService, storageService));
-        commands.put("saveas", new SaveAsCommand(restaurantService, storageService));
-        commands.put("open", new OpenCommand(restaurantService, storageService));
-        commands.put("close", new CloseCommand(restaurantService));
+
+        commands.put("save",
+                new SaveCommand(restaurantService, storageService));
+
+        commands.put("saveas",
+                new SaveAsCommand(restaurantService, storageService));
+
+        commands.put("open",
+                new OpenCommand(restaurantService, storageService));
+
+        commands.put("close",
+                new CloseCommand(restaurantService));
     }
 
     public void processCommand(String input) {
@@ -67,6 +79,17 @@ public class CommandProcessor {
 
         String commandName = parts[0].toLowerCase();
 
+        if (!fileOpened &&
+                !commandName.equals("open") &&
+                !commandName.equals("help") &&
+                !commandName.equals("exit")) {
+
+            System.out.println(
+                    "Няма отворен файл. Първо използвайте open <file>."
+            );
+            return;
+        }
+
         Command command = commands.get(commandName);
 
         if (command == null) {
@@ -77,10 +100,17 @@ public class CommandProcessor {
         try {
             command.execute(parts);
 
+            if (commandName.equals("open")) {
+                fileOpened = true;
+            }
+
+            if (commandName.equals("close")) {
+                fileOpened = false;
+            }
+
         } catch (Exception e) {
             System.out.println("Грешка: " + e.getMessage());
         }
-
     }
 
     public boolean isRunning() {
@@ -89,5 +119,13 @@ public class CommandProcessor {
 
     public void stop() {
         running = false;
+    }
+
+    public void setFileOpened(boolean fileOpened) {
+        this.fileOpened = fileOpened;
+    }
+
+    public boolean isFileOpened() {
+        return fileOpened;
     }
 }
